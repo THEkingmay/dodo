@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
     <title>dodo</title>
+    <script>
+      // The stored theme is applied here, before the first paint, because
+      // everything else runs too late: a module script is deferred, and a
+      // React effect happens after the browser has already painted the body's
+      // --bg. A dark theme restored this way would flash light for a frame.
+      //
+      // This cannot import themeStorageKey from src/lib/theme.ts, so the key is
+      // written out twice on purpose. src/lib/theme.test.ts reads this file and
+      // fails if the two ever drift apart.
+      try {
+        const stored = localStorage.getItem('dodo.theme')
+        if (stored === 'light' || stored === 'dark') {
+          document.documentElement.dataset.theme = stored
+        }
+      } catch {
+        // Storage blocked: keep the light default above rather than fail the load.
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

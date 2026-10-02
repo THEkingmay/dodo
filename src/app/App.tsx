@@ -1,7 +1,16 @@
+import { TodoProvider } from '../features/todos/TodoProvider'
+import type { TodoProviderProps } from '../features/todos/TodoProvider'
+import { TodoScreen } from '../features/todos/TodoScreen'
+
 /**
- * App wiring. Ticket 01 ships a deliberately blank shell (AC 9); ticket 02
- * replaces it with the first real screen.
+ * App wiring: the provider that owns the todos, and the screen that shows
+ * them. The storage prop is threaded through rather than reached for inside the
+ * feature so that "the browser will not save this" is testable end to end.
  */
-export function App() {
-  return <main id="app-shell" className="min-h-dvh bg-bg text-fg" />
+export function App(props: Pick<TodoProviderProps, 'storage'>) {
+  return (
+    <TodoProvider {...props}>
+      <TodoScreen />
+    </TodoProvider>
+  )
 }
